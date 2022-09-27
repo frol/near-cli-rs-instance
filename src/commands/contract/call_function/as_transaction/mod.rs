@@ -7,7 +7,7 @@ pub struct CallFunctionAction {
     contract_account_id: crate::types::account_id::AccountId,
     ///What is the name of the function?
     function_name: String,
-    ///Enter arguments to this function
+    ///Enter arguments to this function as base64-encoded string
     function_args: String,
     #[interactive_clap(long = "prepaid-gas")]
     #[interactive_clap(skip_default_input_arg)]
@@ -68,7 +68,7 @@ impl CallFunctionAction {
             actions: vec![near_primitives::transaction::Action::FunctionCall(
                 near_primitives::transaction::FunctionCallAction {
                     method_name: self.function_name.clone(),
-                    args: self.function_args.clone().into_bytes(),
+                    args: base64::decode(&self.function_args).unwrap(),
                     gas: self.gas.clone().inner,
                     deposit: self.deposit.clone().to_yoctonear(),
                 },
